@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const PANEL_COUNT = 7;
 const PANEL_COLORS = [
-  '#050508', '#070710', '#06060e', '#08080f',
-  '#060610', '#07070d', '#050510'
+  '#464655', '#898993', '#B6B6C1', '#CECEE0', '#CECEE0', '#DEDEEF'
 ];
 
 export default function StairsPreloader({ onDone }) {
@@ -26,7 +25,7 @@ export default function StairsPreloader({ onDone }) {
       const delay = BASE_DELAY + i * STAGGER;
       const t = setTimeout(() => {
         panel.style.transition = `transform ${DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`;
-        panel.style.transform = 'translateY(-100%)';
+        panel.style.transform = 'translateY(100%)';
       }, delay);
       timers.push(t);
     });
