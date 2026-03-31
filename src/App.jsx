@@ -10,6 +10,7 @@ import ScreenshotsSection from './components/ScreenshotsSection';
 import BetaSection from './components/BetaSection';
 import DownloadSection from './components/DownloadSection';
 import FeedbackSection from './components/FeedbackSection';
+import Footer from './components/Footer';
 
 export default function App() {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -39,6 +40,7 @@ export default function App() {
         <BetaSection />
         <DownloadSection />
         <FeedbackSection />
+        <Footer />
       </div>
     </>
   );
