@@ -36,9 +36,10 @@ export default function App() {
       >
         <Navbar />
         <HeroSection />
+        <Screenshorts />
         <ScrollStack />
         {/* <ScreenshotsSection /> */}
-        <Screenshorts />
+        
         <BetaSection />
         <DownloadSection />
         <FeedbackSection />

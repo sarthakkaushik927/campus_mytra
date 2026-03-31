@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { AuroraText } from "@/components/ui/aurora-text";
 
 const PANEL_COUNT = 7;
 const PANEL_COLORS = [
-  '#464655', '#898993', '#B6B6C1', '#CECEE0', '#CECEE0', '#DEDEEF', '#ffffffff'
+  '#ffffffff', '#ffffffff', '#ffffffff', '#ffffffff', '#ffffffff', '#ffffffff', '#ffffffff'
 ];
 
 export default function StairsPreloader({ onDone }) {
@@ -58,7 +59,7 @@ export default function StairsPreloader({ onDone }) {
               marginRight: ch === ' ' ? '0.4em' : '0.02em',
             }}
           >
-            {ch}
+            <AuroraText>{ch}</AuroraText>
           </span>
         ))}
       </div>
