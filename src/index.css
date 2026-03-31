@@ -197,6 +197,31 @@ body {
   transition: font-size 0.3s;
 }
 
+@media (max-width: 768px) {
+  .glass-navbar {
+    width: 95%;
+    padding: 8px 12px;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .glass-navbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .glass-navbar a {
+    font-size: 14px;
+    padding: 8px 6px;
+  }
+  
+  .glass-navbar a:hover,
+  .glass-navbar a.active {
+    font-size: 18px;
+  }
+}
+
 /* ---- SCROLL FADE ---- */
 .scroll-fade {
   opacity: 0;

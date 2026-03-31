@@ -142,7 +142,7 @@ export default function DownloadSection() {
                   padding: '9px 18px',
                   fontSize: '15px',
                   color: '#fff',
-                  fontWeight: 750,
+                  fontWeight: 700,
                   letterSpacing: '0.02em',
                   boxShadow: `0 0 0 1px ${chip.color}30, 0 10px 24px ${chip.color}20`,
                   transition: 'transform 0.25s ease, box-shadow 0.25s ease',
