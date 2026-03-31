@@ -136,7 +136,7 @@ export default function DownloadSection() {
               <div
                 key={chip.label}
                 style={{
-                  background: `${chip.color}7`,
+                  background: `${chip.color}20`,
                   border: `1px solid ${chip.color}`,
                   borderRadius: '50px',
                   padding: '9px 18px',
