@@ -12,6 +12,47 @@ export default function HeroSection() {
 
       <section id="hero" className="relative w-full min-h-screen overflow-hidden bg-slate-900 text-white flex items-center justify-center">
 
+        {/* Color-blend gradient blobs */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      >
+        <div style={{
+          position: 'absolute',
+          top: '15%',
+          left: '10%',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }} />
+        <div style={{
+          position: 'absolute',
+          top: '30%',
+          right: '5%',
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(79,70,229,0.2) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '30%',
+          width: '600px',
+          height: '300px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%)',
+          filter: 'blur(100px)',
+        }} />
+      </div>
+
 
         {/* CrowdCanvas walking figures */}
         <div className="absolute inset-0 z-10 pointer-events-none">
