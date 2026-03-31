@@ -5,7 +5,7 @@ import CursorSpark from './components/CursorSpark';
 import StairsPreloader from './components/StairsPreloader';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import ScrollStack from './components/ScrollStack';
+import ScrollStack from './components/ScrollStack_final';
 // import ScreenshotsSection from './components/ScreenshotsSection';
 import BetaSection from './components/BetaSection';
 import DownloadSection from './components/DownloadSection';
