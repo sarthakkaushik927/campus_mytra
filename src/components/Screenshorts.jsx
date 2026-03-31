@@ -3,8 +3,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
-import ss1 from '../screenshorts/1.jpeg';
-import ss2 from '../screenshorts/2.jpeg';
 import ss3 from '../screenshorts/3.jpeg';
 import ss4 from '../screenshorts/4.jpeg';
 import ss5 from '../screenshorts/5.jpeg';
@@ -13,7 +11,8 @@ import ss7 from '../screenshorts/7.jpeg';
 import ss8 from '../screenshorts/8.jpeg';
 import ss9 from '../screenshorts/9.jpeg';
 
-const images = [ss1, ss2, ss3, ss4, ss5, ss6, ss7, ss8, ss9];
+const images = [ss3, ss4, ss5, ss6, ss7, ss8, ss9];
+
 const Skiper30 = () => {
   const gallery = useRef(null);
   const [dimension, setDimension] = useState({ width: 0, height: 0 });
@@ -52,18 +51,16 @@ const Skiper30 = () => {
 
   return (
     <main className="w-full bg-[#eee] text-black">
-
       <div
         ref={gallery}
         className="relative box-border flex h-[175vh] gap-[2vw] overflow-hidden bg-white p-[2vw]"
       >
         <Column images={[images[0], images[1], images[2]]} y={y} />
         <Column images={[images[3], images[4], images[5]]} y={y2} />
-        <Column images={[images[6], images[7], images[8]]} y={y3} />
-        <Column images={[images[6], images[7], images[8]]} y={y4} />
+        <Column images={[images[6], images[1], images[2]]} y={y3} />
+        <Column images={[images[3], images[4], images[5]]} y={y4} />
       </div>
-
-    </main>
+    </main> 
   );
 };
 
