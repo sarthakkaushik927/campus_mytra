@@ -52,13 +52,6 @@ const Skiper30 = () => {
 
   return (
     <main className="w-full bg-[#eee] text-black">
-      <div className="font-geist flex h-screen items-center justify-center gap-2">
-        <div className="absolute left-1/2 top-[10%] grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black">
-          <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-white after:to-black after:content-['']">
-            scroll down to see
-          </span>
-        </div>
-      </div>
 
       <div
         ref={gallery}
@@ -69,13 +62,7 @@ const Skiper30 = () => {
         <Column images={[images[6], images[7], images[8]]} y={y3} />
         <Column images={[images[6], images[7], images[8]]} y={y4} />
       </div>
-      <div className="font-geist relative flex h-screen items-center justify-center gap-2">
-        <div className="absolute left-1/2 top-[10%] grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black">
-          <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-white after:to-black after:content-['']">
-            scroll Up to see
-          </span>
-        </div>
-      </div>
+
     </main>
   );
 };

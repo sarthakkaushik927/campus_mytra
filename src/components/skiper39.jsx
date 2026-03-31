@@ -1,9 +1,10 @@
 "use client";
 
+import peeps from '../assets/all-peeps.png';
 import { gsap } from "gsap";
 import React, { useEffect, useRef } from "react";
 
-const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
+const CrowdCanvas = ({ src = peeps, rows = 15, cols = 7 }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -14,7 +15,7 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
     if (!ctx) return;
 
     const config = {
-      src,
+      src: Array.isArray(src) ? src : [src],
       rows,
       cols,
     };
@@ -132,7 +133,6 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
     };
 
     // MAIN
-    const img = document.createElement("img");
     const stage = {
       width: 0,
       height: 0,
@@ -142,25 +142,17 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
     const availablePeeps = [];
     const crowd = [];
 
-    const createPeeps = () => {
+    const createPeeps = (img) => {
       const { rows, cols } = config;
       const { naturalWidth: width, naturalHeight: height } = img;
-      const total = rows * cols;
       const rectWidth = width / rows;
       const rectHeight = height / cols;
 
-      for (let i = 0; i < total; i++) {
-        allPeeps.push(
-          createPeep({
-            image: img,
-            rect: [
-              (i % rows) * rectWidth,
-              ((i / rows) | 0) * rectHeight,
-              rectWidth,
-              rectHeight,
-            ],
-          }),
-        );
+      for (let row = 0; row < cols; row += 1) {
+        for (let col = 0; col < rows; col += 1) {
+          const rect = [col * rectWidth, row * rectHeight, rectWidth, rectHeight];
+          allPeeps.push(createPeep({ image: img, rect }));
+        }
       }
     };
 
@@ -227,14 +219,23 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
       initCrowd();
     };
 
+    let imagesLoaded = 0;
     const init = () => {
-      createPeeps();
       resize();
       gsap.ticker.add(render);
     };
 
-    img.onload = init;
-    img.src = config.src;
+    config.src.forEach((srcPath) => {
+      const img = document.createElement("img");
+      img.onload = () => {
+        createPeeps(img);
+        imagesLoaded++;
+        if (imagesLoaded === config.src.length) {
+          init();
+        }
+      };
+      img.src = srcPath;
+    });
 
     const handleResize = () => resize();
     window.addEventListener("resize", handleResize);
@@ -261,7 +262,7 @@ const Skiper39 = () => {
         </span>
       </div>
       <div className="absolute bottom-0 h-full w-screen">
-        <CrowdCanvas src="/images/peeps/all-peeps.png" rows={15} cols={7} />
+        <CrowdCanvas src={peeps} rows={15} cols={7} />
       </div>
     </div>
   );
