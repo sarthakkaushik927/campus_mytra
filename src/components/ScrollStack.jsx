@@ -1,273 +1,340 @@
-import { useEffect, useRef } from 'react';
-import dsaImg from '../assets/dsa_challenge.jpeg';
-import chessImg from '../assets/chess_challenge.jpeg';
-import unoImg from '../assets/uno_challenge.jpeg';
+import { useLayoutEffect, useRef, useCallback } from 'react';
+import Lenis from 'lenis';
 
-const FEATURES = [
-  {
-    id: 'dsa',
-    label: 'DSA Challenge',
-    title: 'Master Data\nStructures',
-    desc: 'Compete in timed DSA challenges, climb the leaderboard, and sharpen your problem-solving skills with curated algorithm puzzles crafted for campus coders.',
-    tag: 'Competitive Coding',
-    color: '#7c3aed',
-    accent: '#a855f7',
-    img: dsaImg,
-    top: '0px',
-    zIndex: 10,
-  },
-  {
-    id: 'chess',
-    label: 'Chess Challenge',
-    title: 'Outsmart\nEvery Move',
-    desc: 'Play live chess against campus rivals. Rated matches, puzzles, and opening tutorials — elevate your game from dorm room to tournament champion.',
-    tag: 'Strategy & Mind',
-    color: '#1e3a5f',
-    accent: '#38bdf8',
-    img: chessImg,
-    top: '60px',
-    zIndex: 11,
-  },
-  {
-    id: 'uno',
-    label: 'UNO Challenge',
-    title: 'Wild Cards\nWild Fun',
-    desc: "Fast-paced UNO with campus-themed wild cards. Create rooms, invite friends, and see who survives the draw-four cascade. Bragging rights await.",
-    tag: 'Multiplayer Fun',
-    color: '#7f1d1d',
-    accent: '#f87171',
-    img: unoImg,
-    top: '120px',
-    zIndex: 12,
-  },
-];
+export const ScrollStackItem = ({ children, itemClassName = '' }) => (
+  <div
+    className={`scroll-stack-card relative w-full h-80 my-8 p-12 rounded-[40px] shadow-[0_0_30px_rgba(0,0,0,0.1)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
+    style={{
+      backfaceVisibility: 'hidden',
+      transformStyle: 'preserve-3d'
+    }}
+  >
+    {children}
+  </div>
+);
 
-function FeatureCard({ feature, index }) {
-  const cardRef = useRef(null);
+const ScrollStack = ({
+  children,
+  className = '',
+  itemDistance = 100,
+  itemScale = 0.03,
+  itemStackDistance = 30,
+  stackPosition = '20%',
+  scaleEndPosition = '10%',
+  baseScale = 0.85,
+  scaleDuration = 0.5,
+  rotationAmount = 0,
+  blurAmount = 0,
+  useWindowScroll = false,
+  onStackComplete
+}) => {
+  const scrollerRef = useRef(null);
+  const stackCompletedRef = useRef(false);
+  const animationFrameRef = useRef(null);
+  const lenisRef = useRef(null);
+  const cardsRef = useRef([]);
+  const lastTransformsRef = useRef(new Map());
+  const isUpdatingRef = useRef(false);
 
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) el.classList.add('visible');
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+  const calculateProgress = useCallback((scrollTop, start, end) => {
+    if (scrollTop < start) return 0;
+    if (scrollTop > end) return 1;
+    return (scrollTop - start) / (end - start);
   }, []);
 
-  const isEven = index % 2 === 0;
+  const parsePercentage = useCallback((value, containerHeight) => {
+    if (typeof value === 'string' && value.includes('%')) {
+      return (parseFloat(value) / 100) * containerHeight;
+    }
+    return parseFloat(value);
+  }, []);
+
+  const getScrollData = useCallback(() => {
+    if (useWindowScroll) {
+      return {
+        scrollTop: window.scrollY,
+        containerHeight: window.innerHeight,
+        scrollContainer: document.documentElement
+      };
+    } else {
+      const scroller = scrollerRef.current;
+      return {
+        scrollTop: scroller.scrollTop,
+        containerHeight: scroller.clientHeight,
+        scrollContainer: scroller
+      };
+    }
+  }, [useWindowScroll]);
+
+  const getElementOffset = useCallback(
+    element => {
+      if (useWindowScroll) {
+        const rect = element.getBoundingClientRect();
+        return rect.top + window.scrollY;
+      } else {
+        return element.offsetTop;
+      }
+    },
+    [useWindowScroll]
+  );
+
+  const updateCardTransforms = useCallback(() => {
+    if (!cardsRef.current.length || isUpdatingRef.current) return;
+
+    isUpdatingRef.current = true;
+
+    const { scrollTop, containerHeight } = getScrollData();
+    const stackPositionPx = parsePercentage(stackPosition, containerHeight);
+    const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
+
+    const endElement = useWindowScroll
+      ? document.querySelector('.scroll-stack-end')
+      : scrollerRef.current?.querySelector('.scroll-stack-end');
+
+    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+
+    cardsRef.current.forEach((card, i) => {
+      if (!card) return;
+
+      const cardTop = getElementOffset(card);
+      const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
+      const triggerEnd = cardTop - scaleEndPositionPx;
+      const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
+      const pinEnd = endElementTop - containerHeight / 2;
+
+      const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
+      const targetScale = baseScale + i * itemScale;
+      const scale = 1 - scaleProgress * (1 - targetScale);
+      const rotation = rotationAmount ? i * rotationAmount * scaleProgress : 0;
+
+      let blur = 0;
+      if (blurAmount) {
+        let topCardIndex = 0;
+        for (let j = 0; j < cardsRef.current.length; j++) {
+          const jCardTop = getElementOffset(cardsRef.current[j]);
+          const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
+          if (scrollTop >= jTriggerStart) {
+            topCardIndex = j;
+          }
+        }
+
+        if (i < topCardIndex) {
+          const depthInStack = topCardIndex - i;
+          blur = Math.max(0, depthInStack * blurAmount);
+        }
+      }
+
+      let translateY = 0;
+      const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
+
+      if (isPinned) {
+        translateY = scrollTop - cardTop + stackPositionPx + itemStackDistance * i;
+      } else if (scrollTop > pinEnd) {
+        translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
+      }
+
+      const newTransform = {
+        translateY: Math.round(translateY * 100) / 100,
+        scale: Math.round(scale * 1000) / 1000,
+        rotation: Math.round(rotation * 100) / 100,
+        blur: Math.round(blur * 100) / 100
+      };
+
+      const lastTransform = lastTransformsRef.current.get(i);
+      const hasChanged =
+        !lastTransform ||
+        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
+        Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
+        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
+        Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
+
+      if (hasChanged) {
+        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
+
+        card.style.transform = transform;
+        card.style.filter = filter;
+
+        lastTransformsRef.current.set(i, newTransform);
+      }
+
+      if (i === cardsRef.current.length - 1) {
+        const isInView = scrollTop >= pinStart && scrollTop <= pinEnd;
+        if (isInView && !stackCompletedRef.current) {
+          stackCompletedRef.current = true;
+          onStackComplete?.();
+        } else if (!isInView && stackCompletedRef.current) {
+          stackCompletedRef.current = false;
+        }
+      }
+    });
+
+    isUpdatingRef.current = false;
+  }, [
+    itemScale,
+    itemStackDistance,
+    stackPosition,
+    scaleEndPosition,
+    baseScale,
+    rotationAmount,
+    blurAmount,
+    useWindowScroll,
+    onStackComplete,
+    calculateProgress,
+    parsePercentage,
+    getScrollData,
+    getElementOffset
+  ]);
+
+  const handleScroll = useCallback(() => {
+    updateCardTransforms();
+  }, [updateCardTransforms]);
+
+  const setupLenis = useCallback(() => {
+    if (useWindowScroll) {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2,
+        infinite: false,
+        wheelMultiplier: 1,
+        lerp: 0.1,
+        syncTouch: true,
+        syncTouchLerp: 0.075
+      });
+
+      lenis.on('scroll', handleScroll);
+
+      const raf = time => {
+        lenis.raf(time);
+        animationFrameRef.current = requestAnimationFrame(raf);
+      };
+      animationFrameRef.current = requestAnimationFrame(raf);
+
+      lenisRef.current = lenis;
+      return lenis;
+    } else {
+      const scroller = scrollerRef.current;
+      if (!scroller) return;
+
+      const lenis = new Lenis({
+        wrapper: scroller,
+        content: scroller.querySelector('.scroll-stack-inner'),
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2,
+        infinite: false,
+        wheelMultiplier: 1,
+        lerp: 0.1,
+        syncTouch: true,
+        syncTouchLerp: 0.075
+      });
+
+      lenis.on('scroll', handleScroll);
+
+      const raf = time => {
+        lenis.raf(time);
+        animationFrameRef.current = requestAnimationFrame(raf);
+      };
+      animationFrameRef.current = requestAnimationFrame(raf);
+
+      lenisRef.current = lenis;
+      return lenis;
+    }
+  }, [handleScroll, useWindowScroll]);
+
+  useLayoutEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const cards = Array.from(
+      useWindowScroll
+        ? document.querySelectorAll('.scroll-stack-card')
+        : scroller.querySelectorAll('.scroll-stack-card')
+    );
+
+    cardsRef.current = cards;
+    const transformsCache = lastTransformsRef.current;
+
+    cards.forEach((card, i) => {
+      if (i < cards.length - 1) {
+        card.style.marginBottom = `${itemDistance}px`;
+      }
+      card.style.willChange = 'transform, filter';
+      card.style.transformOrigin = 'top center';
+      card.style.backfaceVisibility = 'hidden';
+      card.style.transform = 'translateZ(0)';
+      card.style.webkitTransform = 'translateZ(0)';
+      card.style.perspective = '1000px';
+      card.style.webkitPerspective = '1000px';
+    });
+
+    setupLenis();
+
+    updateCardTransforms();
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+      stackCompletedRef.current = false;
+      cardsRef.current = [];
+      transformsCache.clear();
+      isUpdatingRef.current = false;
+    };
+  }, [
+    itemDistance,
+    itemScale,
+    itemStackDistance,
+    stackPosition,
+    scaleEndPosition,
+    baseScale,
+    scaleDuration,
+    rotationAmount,
+    blurAmount,
+    useWindowScroll,
+    onStackComplete,
+    setupLenis,
+    updateCardTransforms
+  ]);
+
+  // Container styles based on scroll mode
+  const containerStyles = useWindowScroll
+    ? {
+        // Global scroll mode - no overflow constraints
+        overscrollBehavior: 'contain',
+        WebkitOverflowScrolling: 'touch',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)'
+      }
+    : {
+        // Container scroll mode - original behavior
+        overscrollBehavior: 'contain',
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
+        willChange: 'scroll-position'
+      };
+
+  const containerClassName = useWindowScroll
+    ? `relative w-full ${className}`.trim()
+    : `relative w-full h-full overflow-y-auto overflow-x-visible ${className}`.trim();
 
   return (
-    <div
-      className="stack-card"
-      style={{
-        top: feature.top,
-        zIndex: feature.zIndex,
-        background: `linear-gradient(135deg, #0a0a14 0%, #070710 100%)`,
-        borderTop: `1px solid rgba(255,255,255,0.06)`,
-      }}
-    >
-      {/* Background glow */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          width: '600px',
-          height: '600px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${feature.color}33 0%, transparent 70%)`,
-          filter: 'blur(80px)',
-          top: isEven ? '-10%' : 'auto',
-          bottom: isEven ? 'auto' : '-10%',
-          left: isEven ? '-5%' : 'auto',
-          right: isEven ? 'auto' : '-5%',
-        }} />
-      </div>
-
-      <div
-        ref={cardRef}
-        className="scroll-fade"
-        style={{
-          maxWidth: '1100px',
-          width: '100%',
-          margin: '0 auto',
-          padding: '0 40px',
-          display: 'grid',
-          gridTemplateColumns: isEven ? '1fr 1fr' : '1fr 1fr',
-          gap: '80px',
-          alignItems: 'center',
-        }}
-      >
-        {/* Text block */}
-        <div style={{ order: isEven ? 0 : 1 }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: `${feature.color}22`,
-            border: `1px solid ${feature.accent}44`,
-            borderRadius: '50px',
-            padding: '5px 14px',
-            marginBottom: '20px',
-            fontSize: '11px',
-            fontWeight: '600',
-            letterSpacing: '0.12em',
-            color: feature.accent,
-            textTransform: 'uppercase',
-          }}>
-            {feature.tag}
-          </div>
-
-          <h2 style={{
-            fontSize: 'clamp(2rem, 4vw, 3.2rem)',
-            fontWeight: 800,
-            lineHeight: 1.05,
-            letterSpacing: '-0.02em',
-            color: '#ffffff',
-            marginBottom: '20px',
-            whiteSpace: 'pre-line',
-          }}>
-            {feature.title}
-          </h2>
-
-          <p style={{
-            fontSize: '16px',
-            lineHeight: 1.75,
-            color: 'rgba(255,255,255,0.55)',
-            maxWidth: '460px',
-            marginBottom: '36px',
-          }}>
-            {feature.desc}
-          </p>
-
-          <a
-            href="#download"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              color: feature.accent,
-              fontSize: '14px',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
-              textDecoration: 'none',
-              borderBottom: `1px solid ${feature.accent}55`,
-              paddingBottom: '2px',
-              transition: 'gap 0.2s',
-            }}
-          >
-            Try the Challenge
-            <span>→</span>
-          </a>
-        </div>
-
-        {/* Image block */}
-        <div style={{ order: isEven ? 1 : 0 }}>
-          <div style={{
-            position: 'relative',
-            borderRadius: '24px',
-            overflow: 'hidden',
-            aspectRatio: '4/3',
-            boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)`,
-          }}>
-            <img
-              src={feature.img}
-              alt={feature.label}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block',
-              }}
-            />
-            {/* Image overlay gradient */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: `linear-gradient(135deg, ${feature.color}33 0%, transparent 60%)`,
-            }} />
-            {/* Label chip on image */}
-            <div style={{
-              position: 'absolute',
-              bottom: '16px',
-              left: '16px',
-              background: 'rgba(5,5,8,0.75)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '50px',
-              padding: '6px 14px',
-              fontSize: '12px',
-              fontWeight: 600,
-              color: '#fff',
-              letterSpacing: '0.05em',
-            }}>
-              {feature.label}
-            </div>
-          </div>
-        </div>
+    <div className={containerClassName} ref={scrollerRef} style={containerStyles}>
+      <div className="scroll-stack-inner pt-[20vh] px-20 pb-[50rem] min-h-screen">
+        {children}
+        {/* Spacer so the last pin can release cleanly */}
+        <div className="scroll-stack-end w-full h-px" />
       </div>
     </div>
   );
-}
+};
 
-export default function ScrollStack() {
-  return (
-    <section
-      id="features"
-      style={{ background: '#050508' }}
-    >
-      {/* Section header */}
-      <div style={{
-        textAlign: 'center',
-        padding: '100px 20px 60px',
-      }}>
-        <p style={{
-          fontSize: '12px',
-          fontWeight: 600,
-          letterSpacing: '0.2em',
-          color: '#7c3aed',
-          textTransform: 'uppercase',
-          marginBottom: '16px',
-        }}>
-          What's Inside
-        </p>
-        <h2 style={{
-          fontSize: 'clamp(2rem, 5vw, 4rem)',
-          fontWeight: 800,
-          letterSpacing: '-0.03em',
-          color: '#fff',
-          margin: 0,
-        }}>
-          Challenges Await
-        </h2>
-        <p style={{
-          marginTop: '16px',
-          fontSize: '17px',
-          color: 'rgba(255,255,255,0.45)',
-          maxWidth: '500px',
-          marginInline: 'auto',
-          lineHeight: 1.7,
-        }}>
-          Three arenas. Infinite rivalry. All on one campus app.
-        </p>
-      </div>
-
-      {/* Stacked cards */}
-      <div className="scroll-stack-wrapper">
-        {FEATURES.map((feature, i) => (
-          <FeatureCard key={feature.id} feature={feature} index={i} />
-        ))}
-      </div>
-
-      {/* Bottom padding so content after can scroll into view */}
-      <div style={{ height: '100vh' }} />
-    </section>
-  );
-}
+export default ScrollStack;

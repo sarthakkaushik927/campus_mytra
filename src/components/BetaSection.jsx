@@ -8,7 +8,6 @@ const PERKS = [
 ];
 
 export default function BetaSection() {
-  const sectionRef = useRef(null);
   const leftRef = useRef(null);
   const rightRef = useRef(null);
 
@@ -16,195 +15,104 @@ export default function BetaSection() {
     const els = [leftRef.current, rightRef.current].filter(Boolean);
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) e.target.classList.add('visible');
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
         });
       },
       { threshold: 0.15 }
     );
-    els.forEach(el => obs.observe(el));
+
+    els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, []);
 
   return (
-    <section
-      id="beta"
-      ref={sectionRef}
-      style={{
-        background: '#050508',
-        padding: '120px 40px',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* BG blobs */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          bottom: '-20%',
-          right: '-10%',
-          width: '700px',
-          height: '700px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(79,70,229,0.12) 0%, transparent 70%)',
-          filter: 'blur(100px)',
-        }} />
-        <div style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-10%',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }} />
+    <section id="beta" className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:px-8 md:py-28 lg:px-12 lg:py-32">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute rounded-full blur-[100px]"
+          style={{
+            bottom: '-20%',
+            right: '-10%',
+            width: '700px',
+            height: '700px',
+            background: 'radial-gradient(circle, rgba(79,70,229,0.12) 0%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute rounded-full blur-[80px]"
+          style={{
+            top: '-10%',
+            left: '-10%',
+            width: '500px',
+            height: '500px',
+            background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)',
+          }}
+        />
       </div>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        {/* Top label */}
-        <div style={{ textAlign: 'center', marginBottom: '70px' }}>
-          <p style={{
-            fontSize: '12px',
-            fontWeight: 600,
-            letterSpacing: '0.2em',
-            color: '#a855f7',
-            textTransform: 'uppercase',
-            marginBottom: '14px',
-          }}>
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-16 lg:gap-24">
+        <div className="text-center">
+          <p className="mx-auto mb-4 max-w-[24rem] text-xs uppercase tracking-[0.24em] text-violet-400">
             Limited Spots
           </p>
-          <h2 style={{
-            fontSize: 'clamp(2rem, 5vw, 3.8rem)',
-            fontWeight: 800,
-            letterSpacing: '-0.03em',
-            color: '#fff',
-            margin: '0 0 16px',
-          }}>
+          <h2 className="mx-auto mb-4 max-w-3xl text-4xl font-extrabold tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
             Join 100 Beta Testers
           </h2>
-          <p style={{
-            fontSize: '17px',
-            color: 'rgba(255,255,255,0.45)',
-            maxWidth: '500px',
-            marginInline: 'auto',
-            lineHeight: 1.7,
-          }}>
+          <p className="mx-auto max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
             Be among the first 100 users and unlock exclusive benefits — custom banners, personalized icons, and much more.
           </p>
         </div>
 
-        {/* Two column */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-        }}>
-          {/* Left — perk cards */}
-          <div
-            ref={leftRef}
-            className="scroll-fade"
-            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
-          >
-            {PERKS.map(perk => (
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div ref={leftRef} className="scroll-fade grid gap-4 sm:grid-cols-2">
+            {PERKS.map((perk) => (
               <div
                 key={perk.title}
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  borderRadius: '18px',
-                  padding: '24px',
-                  transition: 'border-color 0.2s, background 0.2s',
-                }}
+                className="rounded-[1.125rem] border border-white/10 bg-white/5 p-6 transition-all duration-200 hover:border-violet-400/30 hover:bg-white/10"
               >
-                <div style={{ fontSize: '28px', marginBottom: '12px' }}>{perk.icon}</div>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
-                  {perk.title}
-                </div>
-                <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
-                  {perk.desc}
-                </div>
+                <div className="mb-3 text-3xl">{perk.icon}</div>
+                <div className="mb-2 text-sm font-semibold text-white">{perk.title}</div>
+                <div className="text-xs leading-6 text-slate-300">{perk.desc}</div>
               </div>
             ))}
 
-            {/* CTA */}
-            <div style={{ gridColumn: '1 / -1', paddingTop: '8px' }}>
-              <a
-                href="#download"
-                className="btn-silver-glass"
-                style={{ width: '100%', justifyContent: 'center' }}
-              >
+            <div className="col-span-full pt-2">
+              <a href="#download" className="btn-silver-glass inline-flex w-full justify-center px-6 py-4 text-sm font-semibold">
                 Claim Your Spot →
               </a>
             </div>
           </div>
 
-          {/* Right — gradient art placeholder */}
           <div
             ref={rightRef}
-            className="scroll-fade"
-            style={{
-              borderRadius: '28px',
-              overflow: 'hidden',
-              aspectRatio: '1',
-              position: 'relative',
-              boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
-              border: '1px solid rgba(255,255,255,0.06)',
-            }}
+            className="scroll-fade relative overflow-hidden rounded-[1.75rem] border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.5)]"
           >
-            {/* Gradient placeholder for future custom artwork */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 25%, #4c1d95 50%, #1e3a8a 75%, #0f172a 100%)',
-            }} />
-            {/* Shimmer overlay */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%)',
-            }} />
-            {/* Grid pattern */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: `
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px',
-            }} />
-            {/* Center content */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px',
-            }}>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '28px',
-                boxShadow: '0 8px 30px rgba(124,58,237,0.4)',
-              }}>
-                CM
-              </div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>
-                Custom Work — Coming Soon
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 25%, #4c1d95 50%, #1e3a8a 75%, #0f172a 100%)',
+              }}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_30%,rgba(255,255,255,0.04)_50%,transparent_70%)]" />
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+                backgroundSize: '40px 40px',
+              }}
+            />
+            <div className="relative aspect-square flex items-center justify-center p-8">
+              <div className="grid place-items-center gap-3">
+                <div
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl text-3xl text-white shadow-[0_8px_30px_rgba(124,58,237,0.4)]"
+                  style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)' }}
+                >
+                  CM
+                </div>
+                <div className="text-xs uppercase tracking-[0.12em] text-slate-300">
+                  Custom Work — Coming Soon
+                </div>
               </div>
             </div>
           </div>

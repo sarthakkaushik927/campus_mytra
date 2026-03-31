@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="p-3 rounded-full bg-white/5 border border-white/10 hover:border-purple-500/50 transition-colors">
             <FaInstagram size={24} />
           </div>
-          <span>@ka_arma_official</span>
+          <span>@kaarma_techis</span>
         </a>
 
         <a 
@@ -28,7 +28,7 @@ export default function Footer() {
           <span>hello@ka-arma.com</span>
         </a>
 
-        <a 
+        {/* <a 
           href="tel:+1234567890" 
           className="flex items-center gap-3 text-white/70 hover:text-purple-500 transition-colors text-lg"
           aria-label="Phone"
@@ -37,7 +37,7 @@ export default function Footer() {
             <FaPhoneAlt size={20} />
           </div>
           <span>+1 (234) 567-890</span>
-        </a>
+        </a> */}
       </div>
 
       {/* Massive Faded Text */}
