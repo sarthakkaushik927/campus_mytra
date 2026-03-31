@@ -39,7 +39,7 @@ export default function App() {
         <Screenshorts />
         <ScrollStack />
         {/* <ScreenshotsSection /> */}
-        
+
         <BetaSection />
         <DownloadSection />
         <FeedbackSection />

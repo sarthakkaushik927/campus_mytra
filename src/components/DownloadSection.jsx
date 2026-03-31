@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import ColorBends from './ColorBends';
 
 const SIZE_INFO = [
   { label: 'APK Size', value: '~80 MB' },
@@ -237,8 +238,11 @@ export default function DownloadSection() {
               Download APK →
             </a>
           </div>
+          
         </div>
+        
       )}
+      
     </>
   );
 }

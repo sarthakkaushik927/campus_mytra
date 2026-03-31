@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import heroBg from '../assets/hero.png';
 import BorderGlow from './BorderGlow';
+import ColorBends from './ColorBends';
 
 export default function FeedbackSection() {
   const [rating, setRating] = useState(0);
@@ -27,163 +28,165 @@ export default function FeedbackSection() {
   };
 
   return (
-    
-      <section
-        id="feedback"
-        style={{
-          background: '#050508',
-          padding: '120px 40px 160px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Decorative hero.png background */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '60%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}>
-          <img
-            src={heroBg}
-            alt=""
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              opacity: 0.03,
-              filter: 'blur(10px)',
-            }}
-          />
-        </div>
-        
-        
-        {/* BG glow */}
-        <div style={{
-          position: 'absolute',
-          bottom: '0',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '700px',
-          height: '400px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          pointerEvents: 'none',
-        }} />
-        
-        
-        <div
-          ref={sectionRef}
-          className="scroll-fade"
-          style={{ maxWidth: '600px', margin: '0 auto', position: 'relative', zIndex: 1 }}
-        >
-         
-          {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '52px' }}>
-            <p style={{
-              fontSize: '12px',
-              fontWeight: 600,
-              letterSpacing: '0.2em',
-              color: '#7c3aed',
-              textTransform: 'uppercase',
-              marginBottom: '14px',
-            }}>
-              Your Voice Matters
-            </p>
-            <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.03em',
-              color: '#fff',
-              margin: '0 0 14px',
-            }}>
-              Share Feedback
-            </h2>
-            <p style={{
-              fontSize: '16px',
-              color: 'rgba(255,255,255,0.45)',
-              lineHeight: 1.7,
-            }}>
-              Help us build the best campus app. Every suggestion shapes what comes next.
-            </p>
-          </div>
 
-          {submitted ? (
-            /* Success state */
-            <BorderGlow
-              edgeSensitivity={30}
-              glowColor="40 80 80"
-              backgroundColor="#060010"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1}
-              coneSpread={25}
-              animated={false}
-              colors={['#c084fc', '#f472b6', '#38bdf8']}
-            >
-              <div style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(124,58,237,0.3)',
-                borderRadius: '24px',
-                padding: '60px 40px',
-                textAlign: 'center',
-              }}>
-                <div style={{ fontSize: '52px', marginBottom: '20px' }}>🎉</div>
-                <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>
-                  Thanks for your feedback!
-                </h3>
-                <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>
-                  We've received your message and will use it to make Campus Mytra even better.
-                </p>
-                <button
-                  onClick={() => { setSubmitted(false); setForm({ name: '', email: '', message: '' }); setRating(0); }}
-                  style={{
-                    marginTop: '28px',
-                    background: 'none',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '50px',
-                    padding: '10px 28px',
-                    color: 'rgba(255,255,255,0.55)',
-                    fontSize: '13px',
-                    cursor: 'none',
-                    transition: 'border-color 0.2s, color 0.2s',
-                  }}
-                >
-                  Submit Another
-                </button>
-              </div>
-            </BorderGlow>
-          ) : (
-            /* Form */
-            <BorderGlow
-              edgeSensitivity={30}
-              glowColor="40 80 80"
-              backgroundColor="#060010"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1}
-              coneSpread={25}
-              animated={false}
-              colors={['#c084fc', '#f472b6', '#38bdf8']}
-            >
-              <form
-                onSubmit={handleSubmit}
+    <section
+      id="feedback"
+      style={{
+        background: '#050508',
+        padding: '120px 40px 160px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+       
+
+      {/* Decorative hero.png background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '60%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}>
+        <img
+          src={heroBg}
+          alt=""
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: 0.03,
+            filter: 'blur(10px)',
+          }}
+        />
+      </div>
+
+
+      {/* BG glow */}
+      <div style={{
+        position: 'absolute',
+        bottom: '0',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '700px',
+        height: '400px',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)',
+        filter: 'blur(80px)',
+        pointerEvents: 'none',
+      }} />
+
+
+      <div
+        ref={sectionRef}
+        className="scroll-fade"
+        style={{ maxWidth: '600px', margin: '0 auto', position: 'relative', zIndex: 1 }}
+      >
+
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+          <p style={{
+            fontSize: '12px',
+            fontWeight: 600,
+            letterSpacing: '0.2em',
+            color: '#7c3aed',
+            textTransform: 'uppercase',
+            marginBottom: '14px',
+          }}>
+            Your Voice Matters
+          </p>
+          <h2 style={{
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            color: '#fff',
+            margin: '0 0 14px',
+          }}>
+            Share Feedback
+          </h2>
+          <p style={{
+            fontSize: '16px',
+            color: 'rgba(255,255,255,0.45)',
+            lineHeight: 1.7,
+          }}>
+            Help us build the best campus app. Every suggestion shapes what comes next.
+          </p>
+        </div>
+
+        {submitted ? (
+          /* Success state */
+          <BorderGlow
+            edgeSensitivity={30}
+            glowColor="40 80 80"
+            backgroundColor="#060010"
+            borderRadius={28}
+            glowRadius={40}
+            glowIntensity={1}
+            coneSpread={25}
+            animated={false}
+            colors={['#c084fc', '#f472b6', '#38bdf8']}
+          >
+            <div style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              borderRadius: '24px',
+              padding: '60px 40px',
+              textAlign: 'center',
+            }}>
+              <div style={{ fontSize: '52px', marginBottom: '20px' }}>🎉</div>
+              <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>
+                Thanks for your feedback!
+              </h3>
+              <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>
+                We've received your message and will use it to make Campus Mytra even better.
+              </p>
+              <button
+                onClick={() => { setSubmitted(false); setForm({ name: '', email: '', message: '' }); setRating(0); }}
                 style={{
-                  background: 'rgba(255,255,255,0.025)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  borderRadius: '24px',
-                  padding: '48px 40px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '20px',
-                  backdropFilter: 'blur(20px)',
+                  marginTop: '28px',
+                  background: 'none',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '50px',
+                  padding: '10px 28px',
+                  color: 'rgba(255,255,255,0.55)',
+                  fontSize: '13px',
+                  cursor: 'none',
+                  transition: 'border-color 0.2s, color 0.2s',
                 }}
               >
+                Submit Another
+              </button>
+            </div>
+          </BorderGlow>
+        ) : (
+          /* Form */
+          <BorderGlow
+            edgeSensitivity={30}
+            glowColor="40 80 80"
+            backgroundColor="#060010"
+            borderRadius={28}
+            glowRadius={40}
+            glowIntensity={1}
+            coneSpread={25}
+            animated={false}
+            colors={['#c084fc', '#f472b6', '#38bdf8']}
+          >
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                background: 'rgba(255,255,255,0.025)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: '24px',
+                padding: '48px 40px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                backdropFilter: 'blur(20px)',
+              }}
+            >
               {/* Name & Email */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
@@ -286,21 +289,21 @@ export default function FeedbackSection() {
               </button>
             </form>
           </BorderGlow>
-          )}
+        )}
 
-          {/* Footer note */}
-          <p style={{
-            textAlign: 'center',
-            marginTop: '28px',
-            fontSize: '12px',
-            color: 'rgba(255,255,255,0.2)',
-            lineHeight: 1.6,
-          }}>
-            Campus Mytra · Built by KA-arma · Your data is never shared.
-          </p>
-        </div>
-       
-      </section>
-    
+        {/* Footer note */}
+        <p style={{
+          textAlign: 'center',
+          marginTop: '28px',
+          fontSize: '12px',
+          color: 'rgba(255,255,255,0.2)',
+          lineHeight: 1.6,
+        }}>
+          Campus Mytra · Built by KA-arma · Your data is never shared.
+        </p>
+      </div>
+
+    </section>
+
   );
 }

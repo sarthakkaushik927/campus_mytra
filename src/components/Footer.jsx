@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="relative w-full pt-20 pb-10 flex flex-col items-center justify-center overflow-hidden border-t border-white/10 mt-20">
       {/* Contact Info & Socials */}
       <div className="flex flex-col md:flex-row items-center gap-8 mb-20 z-10">
-        <a 
-          href="#" 
+        <a
+          href="#"
           className="flex items-center gap-3 text-white/70 hover:text-purple-500 transition-colors text-lg"
           aria-label="Instagram"
         >
@@ -17,8 +17,8 @@ export default function Footer() {
           <span>@kaarma_techis</span>
         </a>
 
-        <a 
-          href="mailto:fakeemail@gmail.com" 
+        <a
+          href="mailto:fakeemail@gmail.com"
           className="flex items-center gap-3 text-white/70 hover:text-purple-500 transition-colors text-lg"
           aria-label="Email"
         >
