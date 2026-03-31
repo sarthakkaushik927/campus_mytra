@@ -267,7 +267,7 @@ export default function FeedbackSection() {
           color: 'rgba(255,255,255,0.2)',
           lineHeight: 1.6,
         }}>
-          Campus Mytra · Built by Ka-ama · Your data is never shared.
+          Campus Mytra · Built by KA-arma · Your data is never shared.
         </p>
       </div>
     </section>

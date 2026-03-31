@@ -8,6 +8,14 @@ const SIZE_INFO = [
   { label: 'Architecture', value: 'ARM64, x86_64' },
 ];
 
+const CHIP_INFO = [
+  { label: 'Android 8.0+', color: '#2563eb' },
+  { label: 'Free to Install', color: '#ef4444' },
+  { label: 'No Play Store Required', color: '#facc15' },
+  { label: 'Secure APK', color: '#22c55e' },
+  { label: 'Fast Setup', color: '#8b5cf6' },
+];
+
 export default function DownloadSection() {
   const [showGuide, setShowGuide] = useState(false);
   const headRef = useRef(null);
@@ -124,20 +132,32 @@ export default function DownloadSection() {
             justifyContent: 'center',
             flexWrap: 'wrap',
           }}>
-            {['Android 8.0+', 'Free to Install', 'No Play Store Required', 'Secure APK'].map(chip => (
+            {CHIP_INFO.map((chip) => (
               <div
-                key={chip}
+                key={chip.label}
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: `${chip.color}7`,
+                  border: `1px solid ${chip.color}`,
                   borderRadius: '50px',
-                  padding: '7px 16px',
-                  fontSize: '12px',
-                  color: 'rgba(255,255,255,0.5)',
-                  fontWeight: 500,
+                  padding: '9px 18px',
+                  fontSize: '15px',
+                  color: '#fff',
+                  fontWeight: 750,
+                  letterSpacing: '0.02em',
+                  boxShadow: `0 0 0 1px ${chip.color}30, 0 10px 24px ${chip.color}20`,
+                  transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+                  cursor: 'default',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = `0 0 0 1px ${chip.color}, 0 18px 36px ${chip.color}3d`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = `0 0 0 1px ${chip.color}30, 0 10px 24px ${chip.color}20`;
                 }}
               >
-                {chip}
+                {chip.label}
               </div>
             ))}
           </div>

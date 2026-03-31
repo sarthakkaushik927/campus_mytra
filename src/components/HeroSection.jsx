@@ -164,7 +164,7 @@ export default function HeroSection() {
           marginBottom: '40px',
           fontWeight: 500,
         }}>
-          Built by Ka-ama
+          Built by KA-arma
         </p>
 
         {/* Download button */}
