@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const PANEL_COUNT = 7;
 const PANEL_COLORS = [
-  '#464655', '#898993', '#B6B6C1', '#CECEE0', '#CECEE0', '#DEDEEF'
+  '#464655', '#898993', '#B6B6C1', '#CECEE0', '#CECEE0', '#DEDEEF', '#ffffffff'
 ];
 
 export default function StairsPreloader({ onDone }) {
