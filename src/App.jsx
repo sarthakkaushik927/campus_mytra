@@ -6,11 +6,12 @@ import StairsPreloader from './components/StairsPreloader';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ScrollStack from './components/ScrollStack';
-import ScreenshotsSection from './components/ScreenshotsSection';
+// import ScreenshotsSection from './components/ScreenshotsSection';
 import BetaSection from './components/BetaSection';
 import DownloadSection from './components/DownloadSection';
 import FeedbackSection from './components/FeedbackSection';
 import Footer from './components/Footer';
+import Screenshorts from './components/Screenshorts';
 
 export default function App() {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -36,7 +37,8 @@ export default function App() {
         <Navbar />
         <HeroSection />
         <ScrollStack />
-        <ScreenshotsSection />
+        {/* <ScreenshotsSection /> */}
+        <Screenshorts />
         <BetaSection />
         <DownloadSection />
         <FeedbackSection />
